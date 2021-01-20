@@ -126,19 +126,17 @@ public class NumberScrollCounter: UIView {
         
         super.init(frame: CGRect.zero)
         
-        self.clipsToBounds = false
+        self.clipsToBounds = true
         
         setValue(value, animated: animateInitialValue)
         frame.size.height = digitScrollers.first!.height
-        
-        sizeToFit()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    public override func sizeToFit() {
+        
+    public override var intrinsicContentSize: CGSize {
         var width: CGFloat = 0
         
         if let suffixView = suffixView {
@@ -147,7 +145,7 @@ public class NumberScrollCounter: UIView {
             width = lastDigit.frame.origin.x + lastDigit.frame.width
         }
         
-        self.frame.size.width = width
+        return CGSize(width: width, height: digitScrollers.first!.height)
     }
     
     // MARK: - Control
@@ -185,6 +183,8 @@ public class NumberScrollCounter: UIView {
         
         updateScrollers(withDigits: digitsOnly, animated: animated)
         updateScrollerLayout(animated: animated)
+        
+        invalidateIntrinsicContentSize()
     }
     
     /**
