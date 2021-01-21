@@ -48,6 +48,7 @@ public class NumberScrollCounter: UIView {
     let seperator: String
     /// The string that will be used to represent negative values.
     let negativeSign = "-"
+    let attributes: [NSAttributedString.Key : Any]?
     
     /// The view that holds the prefix, or `nil` if there is no prefix.
     private var prefixView: UIView?
@@ -103,7 +104,7 @@ public class NumberScrollCounter: UIView {
         - gradientColor: The color to use for the vertical gradient.  If this is `nil`, then no gradient is applied.
         - gradientStop: The stopping point for the gradient, where the bottom stopping point is (1 - gradientStop).  If gradientStop is not less than 0.5 than it is ignored.  If this is `nil`, then no gradient is applied.
      */
-    public init(value: Float, scrollDuration: TimeInterval = 0.3, decimalPlaces: Int = 0, prefix: String? = nil, suffix: String? = nil, seperator: String = ".", seperatorSpacing: CGFloat = 0, font: UIFont = UIFont.boldSystemFont(ofSize: UIFont.labelFontSize), textColor: UIColor = .black, animateInitialValue: Bool = false, gradientColor: UIColor? = nil, gradientStop: Float? = nil) {
+    public init(value: Float, scrollDuration: TimeInterval = 0.3, decimalPlaces: Int = 0, prefix: String? = nil, suffix: String? = nil, seperator: String = ".", seperatorSpacing: CGFloat = 0, font: UIFont = UIFont.boldSystemFont(ofSize: UIFont.labelFontSize), textColor: UIColor = .black, animateInitialValue: Bool = false, gradientColor: UIColor? = nil, gradientStop: Float? = nil, attributes: [NSAttributedString.Key : Any]? = nil) {
 
         self.currentValue = value
         
@@ -115,6 +116,7 @@ public class NumberScrollCounter: UIView {
         self.suffix = suffix
         self.seperator = seperator
         self.seperatorSpacing = seperatorSpacing
+        self.attributes = attributes
         
         self.scrollDuration = scrollDuration
         self.gradientColor = gradientColor
@@ -255,7 +257,7 @@ public class NumberScrollCounter: UIView {
         }
         
         let seperatorLabel = UILabel()
-        seperatorLabel.text = seperator
+        seperatorLabel.attributedText = NSAttributedString(string: seperator, attributes: attributes)
         seperatorLabel.textColor = textColor
         seperatorLabel.font = font
         seperatorLabel.sizeToFit()
@@ -321,7 +323,7 @@ public class NumberScrollCounter: UIView {
                 }
             } else if negativeSignView == nil {
                 let negativeLabel = UILabel()
-                negativeLabel.text = negativeSign
+                negativeLabel.attributedText = NSAttributedString(string: negativeSign, attributes: attributes)
                 negativeLabel.textColor = textColor
                 negativeLabel.font = font
                 negativeLabel.sizeToFit()
@@ -359,7 +361,7 @@ public class NumberScrollCounter: UIView {
         
         if prefixView == nil, let prefix = prefix {
             let prefixLabel = UILabel()
-            prefixLabel.text = prefix
+            prefixLabel.attributedText = NSAttributedString(string: prefix, attributes: attributes)
             prefixLabel.textColor = textColor
             prefixLabel.font = font
             prefixLabel.sizeToFit()
@@ -392,7 +394,7 @@ public class NumberScrollCounter: UIView {
         
         if suffixView == nil, let suffix = suffix {
             let suffixLabel = UILabel()
-            suffixLabel.text = suffix
+            suffixLabel.attributedText = NSAttributedString(string: suffix, attributes: attributes)
             suffixLabel.textColor = textColor
             suffixLabel.font = font
             suffixLabel.sizeToFit()
@@ -435,7 +437,7 @@ public class NumberScrollCounter: UIView {
     private func updateScrollers(add count: Int) {
         var newScrollers = [DigitScrollCounter]()
         for _ in 0..<count {
-            let digitScrollCounter = DigitScrollCounter(font: font, textColor: textColor, backgroundColor: digitScrollerBackgroundColor, scrollDuration: scrollDuration, gradientColor: gradientColor, gradientStop: gradientStop)
+            let digitScrollCounter = DigitScrollCounter(font: font, textColor: textColor, backgroundColor: digitScrollerBackgroundColor, scrollDuration: scrollDuration, gradientColor: gradientColor, gradientStop: gradientStop, attributes: attributes)
             newScrollers.append(digitScrollCounter)
         }
         digitScrollers.insert(contentsOf: newScrollers, at: 0)
